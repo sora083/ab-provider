@@ -27,7 +27,7 @@ func main() {
 		},
 	}
 	e.Renderer = &Renderer{
-		templates: template.Must(template.New("").Delims("[[", "]]").Funcs(funcs).ParseGlob("templates/*.tmpl")),
+		templates: template.Must(template.New("").Delims("[[", "]]").Funcs(funcs).ParseGlob("templates/*.html")),
 	}
 
 	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
@@ -35,23 +35,36 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// ルーティング
-	e.GET("/", func(c echo.Context) error {
-		return c.Render(200, "index.tmpl", echo.Map{})
-	})
-
-	e.GET("/search", func(c echo.Context) error {
-		log.Println("request")
-		// log.info("request: {}", request.toString())
-		// if result.hasErrors() {
-		// 	log.error("validation error")
-		// }
-		// List < SearchResult > searchResults = flightSearchService.flightSearch(request)
-		// log.info("response: {}", searchResults.toString())
-		log.Println("response")
-		// model.addAttribute("results", searchResults)
-		return c.Render(200, "searchResults.tmpl", echo.Map{})
-	})
+	e.GET("/", Index)
+	e.GET("/search", Search)
 
 	// サーバー起動
 	e.Start(":8080")
+}
+
+
+func Index(c echo.Context) error {
+	return c.Render(200, "index.html", echo.Map{})
+}
+
+func Search(c echo.Context) error {
+	log.Println("request")
+
+	var departure = c.QueryParam("departure")
+	var arrival = c.QueryParam("arrival")
+	var departureDate = c.QueryParam("departureDate")
+	// log.info("request: {}", request.toString())
+
+	log.Println("departure: %s", departure)
+	log.Println("arrival: %s", arrival)
+	log.Println("departureDate: %s", departureDate)
+
+	// if result.hasErrors() {
+	// 	log.error("validation error")
+	// }
+	// List < SearchResult > searchResults = flightSearchService.flightSearch(request)
+	// log.info("response: {}", searchResults.toString())
+	log.Println("response")
+	// model.addAttribute("results", searchResults)
+	return c.Render(200, "searchResults.html", echo.Map{})
 }
