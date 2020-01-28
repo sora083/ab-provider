@@ -8,6 +8,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sora083/ab-provider/api"
 )
 
 type Renderer struct {
@@ -42,7 +43,6 @@ func main() {
 	e.Start(":8080")
 }
 
-
 func Index(c echo.Context) error {
 	return c.Render(200, "index.html", echo.Map{})
 }
@@ -55,16 +55,24 @@ func Search(c echo.Context) error {
 	var departureDate = c.QueryParam("departureDate")
 	// log.info("request: {}", request.toString())
 
-	log.Println("departure: %s", departure)
-	log.Println("arrival: %s", arrival)
-	log.Println("departureDate: %s", departureDate)
+	log.Println("departure: ", departure)
+	log.Println("arrival: ", arrival)
+	log.Println("departureDate: ", departureDate)
 
 	// if result.hasErrors() {
 	// 	log.error("validation error")
 	// }
-	// List < SearchResult > searchResults = flightSearchService.flightSearch(request)
-	// log.info("response: {}", searchResults.toString())
-	log.Println("response")
+
+	api := api.FetchTicketsInfos()
+	log.Println("response:", api)
+	// if err := api.Get(); err != nil {
+	// 	return err
+	// }
+
 	// model.addAttribute("results", searchResults)
 	return c.Render(200, "searchResults.html", echo.Map{})
+}
+
+func featchSearchResults() {
+
 }
