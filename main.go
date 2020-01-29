@@ -15,42 +15,47 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
+type Url struct {
+	Qr   string  `json:"qr,omitempty"`
+	Mobile   string  `json:"mobile,omitempty"`
+	Pc   string  `json:"pc,omitempty"`
+}
+
+type Code struct {
+	Code   string  `json:"code,omitempty"`
+	Name   string  `json:"name,omitempty"`
+}
+
 type Ticket struct {
 	ID          string `json:"id,omitempty"`
 	title       string `json:"title,omitempty"`
-	last_update string `json:"last_update,omitempty"`
+	LastUpdate string `json:"last_update,omitempty"`
 	//ist<Airline> airline string `json:"id,omitempty"`
-	airline_type    string `json:"airline_type,omitempty"`
+	AirlineType    string `json:"airline_type,omitempty"`
 	airline_summary string `json:"airline_summary,omitempty"`
 	//DeptDetail deptDetail string `json:"dept_detail,omitempty"`
 	// private CityNumber city_number string `json:"id,omitempty"`
 	// private List<City> city string `json:"id,omitempty"`
-	term_min   int64  `json:"term_min,omitempty"`
-	term_max   int64  `json:"term_max,omitempty"`
+	TermMin    string  `json:"term_min,omitempty"`
+	TermMax   string  `json:"term_max,omitempty"`
 	seat_class string `json:"seat_class,omitempty"`
 	dept_time  string `json:"dept_time,omitempty"`
-	trip_type  string `json:"trip_type,omitempty"`
-	price      int64  `json:"price,omitempty"`
-	bland      string `json:"bland,omitempty"`
-	//urls string `json:"urls,omitempty"`
+	TripType  Code `json:"trip_type,omitempty"`
+	//Area  Code `json:"area,omitempty"`
+	//price      int64  `json:"price,omitempty"`
+	Brand      Code `json:"brand,omitempty"`
+	//Urls Url `json:"urls,omitempty"`
 }
 
 type SearchResult struct {
+	ResultsReturned  string  `json:"results_returned"`
 	ResultsStart     int64  `json:"results_start"`
-	ResultsReturned  int64  `json:"results_returned"`
-	ResultsAvailable int64  `json:"results_available"`
-	//ticket          Ticket `json:"ticket,omitempty"`
+	ResultsAvailable string  `json:"results_available"`
+	Ticket          []Ticket `json:"ticket,omitempty"`
 }
 
 type SearchResults struct {
 	Results SearchResult `json:"results"`
-}
-
-//Todo is struct
-type Todo struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
 }
 
 type Validator struct {
@@ -127,9 +132,8 @@ func Search(c echo.Context) error {
 	log.Println("RES:", string(response))
 
 	var results SearchResults
-	//var results Todo
     json.Unmarshal(response, &results)
  
     log.Print("RESPONSE: ", results)
-	return c.Render(200, "search_results.html", echo.Map{})
+	return c.Render(200, "search_results.html", results)
 }
