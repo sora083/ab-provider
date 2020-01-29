@@ -55,6 +55,7 @@ func FetchTicketsInfos(req *model.SearchReq) ([]byte, error) {
 	values.Add("format", "json")
   
 	httpUrl := "http://webservice.recruit.co.jp/ab-road-air/ticket/v1/"
+	//httpUrl := "https://jsonplaceholder.typicode.com/todos"
 	
 	timeout := time.Duration(30 * time.Second)
 	client := &http.Client{

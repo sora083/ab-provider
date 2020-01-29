@@ -36,15 +36,21 @@ type Ticket struct {
 }
 
 type SearchResult struct {
-	resultsStart     int64  `json:"results_start,omitempty"`
-	resultsReturned  int64  `json:"results_returned,omitempty"`
-	resultsAvailable int64  `json:"results_available,omitempty"`
-	tickets          Ticket `json:"ticket,omitempty"`
+	ResultsStart     int64  `json:"results_start"`
+	ResultsReturned  int64  `json:"results_returned"`
+	ResultsAvailable int64  `json:"results_available"`
+	//ticket          Ticket `json:"ticket,omitempty"`
 }
 
 type SearchResults struct {
-	//results SearchResult `json:"results,omitempty"`
-	results string `json:"results"`
+	Results SearchResult `json:"results"`
+}
+
+//Todo is struct
+type Todo struct {
+	ID        int    `json:"id"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
 }
 
 type Validator struct {
@@ -121,6 +127,7 @@ func Search(c echo.Context) error {
 	log.Println("RES:", string(response))
 
 	var results SearchResults
+	//var results Todo
     json.Unmarshal(response, &results)
  
     log.Print("RESPONSE: ", results)
