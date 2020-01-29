@@ -5,20 +5,21 @@ import (
 	"log"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/sora083/ab-provider/model"
 )
 
-func FetchTicketsInfos() *resty.Response {
+func FetchTicketsInfos(req *model.SearchReq) *resty.Response {
 	// Create a Resty Client
 	client := resty.New()
 
-	log.Println("Before start to call API")
+	log.Println("Before start to call API", req)
 
 	resp, err := client.R().
 		EnableTrace().
 		SetQueryParams(map[string]string{
-			"dept":   "TYO",
-			"city":   "SEL",
-			"tmd":    "20200301",
+			"dept":   req.Departure,
+			"city":   req.Arrival,
+			"ymd":    req.DepartureDate,
 			"key":    "",
 			"format": "json",
 		}).
