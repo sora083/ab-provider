@@ -15,42 +15,36 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-// type SearchReq struct {
-// 	Departure     string `form:"departure" query:"departure" validate:"required,len=3"`
-// 	Arrival       string `form:"arrival" query:"arrival" validate:"required,len=3"`
-// 	DepartureDate string `form:"departureDate" query:"departureDate" validate:"required,len=8"`
-// }
+type Ticket struct {
+	ID          string `json:"id,omitempty"`
+	title       string `json:"title,omitempty"`
+	last_update string `json:"last_update,omitempty"`
+	//ist<Airline> airline string `json:"id,omitempty"`
+	airline_type    string `json:"airline_type,omitempty"`
+	airline_summary string `json:"airline_summary,omitempty"`
+	//DeptDetail deptDetail string `json:"dept_detail,omitempty"`
+	// private CityNumber city_number string `json:"id,omitempty"`
+	// private List<City> city string `json:"id,omitempty"`
+	term_min   int64  `json:"term_min,omitempty"`
+	term_max   int64  `json:"term_max,omitempty"`
+	seat_class string `json:"seat_class,omitempty"`
+	dept_time  string `json:"dept_time,omitempty"`
+	trip_type  string `json:"trip_type,omitempty"`
+	price      int64  `json:"price,omitempty"`
+	bland      string `json:"bland,omitempty"`
+	//urls string `json:"urls,omitempty"`
+}
 
-// type Ticket struct {
-// 	ID          string `json:"id,omitempty"`
-// 	title       string `json:"title,omitempty"`
-// 	last_update string `json:"last_update,omitempty"`
-// 	//ist<Airline> airline string `json:"id,omitempty"`
-// 	airline_type    string `json:"airline_type,omitempty"`
-// 	airline_summary string `json:"airline_summary,omitempty"`
-// 	//DeptDetail deptDetail string `json:"dept_detail,omitempty"`
-// 	// private CityNumber city_number string `json:"id,omitempty"`
-// 	// private List<City> city string `json:"id,omitempty"`
-// 	term_min   int64  `json:"term_min,omitempty"`
-// 	term_max   int64  `json:"term_max,omitempty"`
-// 	seat_class string `json:"seat_class,omitempty"`
-// 	dept_time  string `json:"dept_time,omitempty"`
-// 	trip_type  string `json:"trip_type,omitempty"`
-// 	price      int64  `json:"price,omitempty"`
-// 	bland      string `json:"bland,omitempty"`
-// 	//urls string `json:"urls,omitempty"`
-// }
-
-// type SearchResult struct {
-// 	resultsStart     int64  `json:"results_start,omitempty"`
-// 	resultsReturned  int64  `json:"results_returned,omitempty"`
-// 	resultsAvailable int64  `json:"results_available,omitempty"`
-// 	tickets          Ticket `json:"ticket,omitempty"`
-// }
+type SearchResult struct {
+	resultsStart     int64  `json:"results_start,omitempty"`
+	resultsReturned  int64  `json:"results_returned,omitempty"`
+	resultsAvailable int64  `json:"results_available,omitempty"`
+	tickets          Ticket `json:"ticket,omitempty"`
+}
 
 type SearchResults struct {
 	//results SearchResult `json:"results,omitempty"`
-	results string `json:"results,omitempty"`
+	results string `json:"results"`
 }
 
 type Validator struct {
@@ -119,24 +113,16 @@ func Search(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Validate is failed: "+err.Error())
 	}
 
-	response := api.FetchTicketsInfos(req)
-	log.Println("response:", response)
-	log.Println("response.Body:", response.Body)
-	log.Println("response.RawBody:", response.RawBody)
-	//log.Println("response.RawResponse:", response.RawResponse)
-	// if err := api.Get(); err != nil {
-	// 	return err
-	// }
-
-	// model.addAttribute("results", searchResults)
-	// var r SearchResults
-	// json.Unmarshal(response.Body, &r)
-
-	var err error
-	var body []byte
-	if body, err = json.Marshal(response); err != nil {
-		return c.String(http.StatusBadRequest, "Parse is failed: "+err.Error())
+	response, err := api.FetchTicketsInfos(req)
+	if err != nil {
+		log.Fatal(err)
 	}
-	log.Println("RES:", body)
-	return c.Render(200, "searchResults.html", echo.Map{})
+
+	log.Println("RES:", string(response))
+
+	var results SearchResults
+    json.Unmarshal(response, &results)
+ 
+    log.Print("RESPONSE: ", results)
+	return c.Render(200, "search_results.html", echo.Map{})
 }
