@@ -8,8 +8,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"github.com/sora083/ab-provider/model"
 	"time"
+
+	"github.com/sora083/ab-provider/model"
 )
 
 // func FetchTicketsInfos(req *model.SearchReq) *resty.Response {
@@ -46,26 +47,25 @@ import (
 
 func FetchTicketsInfos(req *model.SearchReq) ([]byte, error) {
 
-
 	values := url.Values{}
 	values.Add("dept", req.Departure)
 	values.Add("city", req.Arrival)
 	values.Add("ymd", req.DepartureDate)
 	values.Add("key", "")
 	values.Add("format", "json")
-  
+
 	httpUrl := "http://webservice.recruit.co.jp/ab-road-air/ticket/v1/"
-	
+
 	timeout := time.Duration(30 * time.Second)
 	client := &http.Client{
-        Timeout: timeout,
+		Timeout: timeout,
 	}
-	
+
 	resp, err := client.Get(httpUrl + "?" + values.Encode())
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
-  
+
 	// 関数を抜ける際に必ずresponseをcloseするようにdeferでcloseを呼ぶ
 	defer resp.Body.Close()
 

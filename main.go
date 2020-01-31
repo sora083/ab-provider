@@ -16,42 +16,45 @@ import (
 )
 
 type Url struct {
-	Qr   string  `json:"qr,omitempty"`
-	Mobile   string  `json:"mobile,omitempty"`
-	Pc   string  `json:"pc,omitempty"`
+	Qr     string `json:"qr,omitempty"`
+	Mobile string `json:"mobile,omitempty"`
+	Pc     string `json:"pc,omitempty"`
+}
+
+type City struct {
+	Code    string `json:"code,omitempty"`
+	Name    string `json:"name,omitempty"`
+	NonStop string `json:"nonstop,omitempty"`
 }
 
 type Code struct {
-	Code   string  `json:"code,omitempty"`
-	Name   string  `json:"name,omitempty"`
+	Code string `json:"code,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 type Ticket struct {
-	ID          string `json:"id,omitempty"`
-	title       string `json:"title,omitempty"`
-	LastUpdate string `json:"last_update,omitempty"`
-	//ist<Airline> airline string `json:"id,omitempty"`
+	ID             string `json:"id,omitempty"`
+	Title          string `json:"title,omitempty"`
+	LastUpdate     string `json:"last_update,omitempty"`
+	Airline        []Code `json:"airline,omitempty"`
 	AirlineType    string `json:"airline_type,omitempty"`
-	airline_summary string `json:"airline_summary,omitempty"`
-	//DeptDetail deptDetail string `json:"dept_detail,omitempty"`
-	// private CityNumber city_number string `json:"id,omitempty"`
-	// private List<City> city string `json:"id,omitempty"`
-	TermMin    string  `json:"term_min,omitempty"`
-	TermMax   string  `json:"term_max,omitempty"`
-	seat_class string `json:"seat_class,omitempty"`
-	dept_time  string `json:"dept_time,omitempty"`
-	TripType  Code `json:"trip_type,omitempty"`
-	//Area  Code `json:"area,omitempty"`
-	//price      int64  `json:"price,omitempty"`
-	Brand      Code `json:"brand,omitempty"`
-	//Urls Url `json:"urls,omitempty"`
+	AirlineSummary string `json:"airline_summary,omitempty"`
+	City           []City `json:"city,omitempty"`
+	TermMin        string `json:"term_min,omitempty"`
+	TermMax        string `json:"term_max,omitempty"`
+	SeatClass      Code   `json:"seat_class,omitempty"`
+	DeptTIme       string `json:"dept_time,omitempty"`
+	TripType       Code   `json:"trip_type,omitempty"`
+	Price          int64  `json:"price,omitempty"`
+	Brand          Code   `json:"brand,omitempty"`
+	Urls           Url    `json:"urls,omitempty"`
 }
 
 type SearchResult struct {
-	ResultsReturned  string  `json:"results_returned"`
-	ResultsStart     int64  `json:"results_start"`
-	ResultsAvailable string  `json:"results_available"`
-	Ticket          []Ticket `json:"ticket,omitempty"`
+	ResultsReturned  string   `json:"results_returned"`
+	ResultsStart     int64    `json:"results_start"`
+	ResultsAvailable string   `json:"results_available"`
+	Ticket           []Ticket `json:"ticket,omitempty"`
 }
 
 type SearchResults struct {
@@ -86,14 +89,16 @@ func (r *Renderer) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
 	e := echo.New()
 	e.Validator = &Validator{validator: validator.New()}
-	funcs := template.FuncMap{
-		"encode_json": func(v interface{}) string {
-			b, _ := json.Marshal(v)
-			return string(b)
-		},
-	}
+	// funcs := template.FuncMap{
+	// 	"encode_json": func(v interface{}) string {
+	// 		b, _ := json.Marshal(v)
+	// 		return string(b)
+	// 	},
+	// }
 	e.Renderer = &Renderer{
-		templates: template.Must(template.New("").Delims("[[", "]]").Funcs(funcs).ParseGlob("templates/*.html")),
+		//templates: template.Must(template.New("").Delims("[[", "]]").Funcs(funcs).ParseGlob("templates/*.html")),
+		//templates: template.Must(template.New("").Delims("[[", "]]").ParseGlob("templates/*.html")),
+		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 
 	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
@@ -129,11 +134,11 @@ func Search(c echo.Context) error {
 		log.Fatal(err)
 	}
 
-	log.Println("RES:", string(response))
-
 	var results SearchResults
-    json.Unmarshal(response, &results)
- 
-    log.Print("RESPONSE: ", results)
-	return c.Render(200, "search_results.html", results)
+	json.Unmarshal(response, &results)
+
+	tickets := results.Results.Ticket
+	log.Print("RESPONSE: ", tickets)
+
+	return c.Render(200, "search_results.html", tickets)
 }

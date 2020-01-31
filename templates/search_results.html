@@ -1,3 +1,4 @@
+{{define "search_results.html"}}
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -30,8 +31,7 @@
             crossorigin="anonymous"></script>
 
     <div class="container">
-        <!--<div class="table-responsive">-->
-        <div>
+        <div class="table-responsive">
             <table class="table table-bordered table-hover table-condensed">
                 <tr class="active">
                     <th>id</th>
@@ -43,16 +43,20 @@
                     <th>URL</th>
                     <th>QR</th>
                 </tr>
-                <tr th:each="result : ${results}">
-                    <td th:text="${result.id}"></td>
-                    <td th:text="${result.title}"></td>
-                    <td th:text="${result.airline}"></td>
-                    <td th:text="${result.city}"></td>
-                    <td th:text="${result.seatClass}"></td>
-                    <td th:text="${result.price}"></td>
-                    <td><a th:href="${result.url}">Page</a></td>
-                    <td><img th:src="|data:image/png;base64,${result.qrCode}|"></td>
+                {{ range . }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td>{{ .Title }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ .SeatClass.Name }}</td>
+                    <td>{{ .Price }}</td>
+                    <td>{{ .Urls.Pc }}</td>
+                    <!-- <td><img th:src="|data:image/png;base64,${result.qrCode}|"></td> -->
+                    <!-- <td></td> -->
+                    <td><img src="|data:image/png;base64,{{ .Urls.Qr }}|"></td>
                 </tr>
+                {{ end }}
             </table>
         </div>
     </div>
@@ -73,5 +77,5 @@
              border="0" title="エイビーロード航空券Webサービス">
     </a>
     </body>
-    </html>
-    
+</html>
+{{end}}
