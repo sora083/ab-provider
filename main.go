@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"fmt"
+	//"strings"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -21,11 +23,17 @@ type Url struct {
 	Pc     string `json:"pc,omitempty"`
 }
 
-type City struct {
-	Code    string `json:"code,omitempty"`
-	Name    string `json:"name,omitempty"`
-	NonStop string `json:"nonstop,omitempty"`
+type PriceType struct {
+	Min int64  `json:"min,omitempty"`
+	Max int64  `json:"max,omitempty"`
+	Commission int64  `json:"commsission,omitempty"`
 }
+
+// type City struct {
+// 	Code    string `json:"code,omitempty"`
+// 	Name    string `json:"name,omitempty"`
+// 	NonStop string `json:"nonstop,omitempty"`
+// }
 
 type Code struct {
 	Code string `json:"code,omitempty"`
@@ -39,13 +47,13 @@ type Ticket struct {
 	Airline        []Code `json:"airline,omitempty"`
 	AirlineType    string `json:"airline_type,omitempty"`
 	AirlineSummary string `json:"airline_summary,omitempty"`
-	City           []City `json:"city,omitempty"`
+	City           []Code `json:"city,omitempty"`
 	TermMin        string `json:"term_min,omitempty"`
 	TermMax        string `json:"term_max,omitempty"`
 	SeatClass      Code   `json:"seat_class,omitempty"`
 	DeptTIme       string `json:"dept_time,omitempty"`
 	TripType       Code   `json:"trip_type,omitempty"`
-	Price          int64  `json:"price,omitempty"`
+	Price          PriceType  `json:"price,omitempty"`
 	Brand          Code   `json:"brand,omitempty"`
 	Urls           Url    `json:"urls,omitempty"`
 }
@@ -86,6 +94,21 @@ func (r *Renderer) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return r.templates.ExecuteTemplate(w, name, data)
 }
 
+func GetCity(cities []Code) string {
+	//return strings.Join(cities, ",")
+	// str string := nil
+	// for i, s := range cities {
+	// 	str = str + s.Name + "(" + s.Code + ") "
+	// }
+	// return str
+	return "City"
+}
+
+func GetPrice(price PriceType) string {
+	//return Price.Min + "〜" + Price.Max + "(" + Price.Commission + ")"
+	return fmt.Sprintf("%d 〜 %d(%d)", price.Min, price.Max, price.Commission)
+}
+
 func main() {
 	e := echo.New()
 	e.Validator = &Validator{validator: validator.New()}
@@ -98,7 +121,8 @@ func main() {
 	e.Renderer = &Renderer{
 		//templates: template.Must(template.New("").Delims("[[", "]]").Funcs(funcs).ParseGlob("templates/*.html")),
 		//templates: template.Must(template.New("").Delims("[[", "]]").ParseGlob("templates/*.html")),
-		templates: template.Must(template.ParseGlob("templates/*.html")),
+		templates: template.Must(template.New("").ParseGlob("templates/*.html")),
+		//templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 
 	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
@@ -138,7 +162,7 @@ func Search(c echo.Context) error {
 	json.Unmarshal(response, &results)
 
 	tickets := results.Results.Ticket
-	log.Print("RESPONSE: ", tickets)
+	//log.Print("RESPONSE: ", tickets)
 
 	return c.Render(200, "search_results.html", tickets)
 }

@@ -2,6 +2,7 @@ package api
 
 import (
 	//"fmt"
+	"os"
 	"log"
 
 	//"github.com/go-resty/resty/v2"
@@ -11,7 +12,15 @@ import (
 	"time"
 
 	"github.com/sora083/ab-provider/model"
+	"github.com/joho/godotenv"
 )
+
+func Env_load() {
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+}
 
 // func FetchTicketsInfos(req *model.SearchReq) *resty.Response {
 // 	// Create a Resty Client
@@ -47,11 +56,13 @@ import (
 
 func FetchTicketsInfos(req *model.SearchReq) ([]byte, error) {
 
+	Env_load()
+
 	values := url.Values{}
 	values.Add("dept", req.Departure)
 	values.Add("city", req.Arrival)
 	values.Add("ymd", req.DepartureDate)
-	values.Add("key", "")
+	values.Add("key", os.Getenv("AIR_API_KEY"))
 	values.Add("format", "json")
 
 	httpUrl := "http://webservice.recruit.co.jp/ab-road-air/ticket/v1/"

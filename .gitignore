@@ -19,3 +19,6 @@
 
 # Mac
 .DS_store
+
+# env
+.env

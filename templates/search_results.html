@@ -1,34 +1,36 @@
 {{define "search_results.html"}}
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8"/>
-        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
-        <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <title>Airticket sarch results</title>
-        <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-              integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-        <!-- custom css -->
-        <style type="text/css">
-        </style>
-    </head>
-    <body>
+
+<head>
+    <meta charset="UTF-8" />
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airticket sarch results</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <!-- custom css -->
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
     <h1>Search results</h1>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-            crossorigin="anonymous"></script>
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
 
     <div class="container">
         <div class="table-responsive">
@@ -50,10 +52,9 @@
                     <td></td>
                     <td></td>
                     <td>{{ .SeatClass.Name }}</td>
-                    <td>{{ .Price }}</td>
+                    <td></td>
                     <td>{{ .Urls.Pc }}</td>
                     <!-- <td><img th:src="|data:image/png;base64,${result.qrCode}|"></td> -->
-                    <!-- <td></td> -->
                     <td><img src="|data:image/png;base64,{{ .Urls.Qr }}|"></td>
                 </tr>
                 {{ end }}
@@ -73,9 +74,10 @@
     </nav>
 
     <a href="http://webservice.recruit.co.jp/">
-        <img src="http://webservice.recruit.co.jp/banner/abroad-air-m.gif" alt="エイビーロード航空券Webサービス" width="88" height="35"
-             border="0" title="エイビーロード航空券Webサービス">
+        <img src="http://webservice.recruit.co.jp/banner/abroad-air-m.gif" alt="エイビーロード航空券Webサービス" width="88"
+            height="35" border="0" title="エイビーロード航空券Webサービス">
     </a>
-    </body>
+</body>
+
 </html>
 {{end}}
